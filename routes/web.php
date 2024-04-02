@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth:sanctum', 
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -25,6 +25,8 @@ Route::middleware([
     })->name('dashboard');
 
 
+    
     Route::resource('usuarios', UserController::class);
+    Route::get('usuarios/list', [UserController::class, 'list'])->name('usuarios.list');
 });
 

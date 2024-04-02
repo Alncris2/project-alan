@@ -29,8 +29,11 @@ import DataTablesCore from "datatables.net";
                         >
                             <thead>
                                 <tr>
-                                    <th class="border-collapse border border-slate-500">First</th>
-                                    <th class="border-collapse border border-slate-500">Second</th>
+                                    <th class="border-collapse border border-slate-500">Criação</th>
+                                    <th class="border-collapse border border-slate-500">Nome</th>
+                                    <th class="border-collapse border border-slate-500">Email</th>
+                                    <th class="border-collapse border border-slate-500">Tipo</th>
+                                    <th class="border-collapse border border-slate-500">Ações</th>
                                 </tr>
                             </thead>
                         </DataTable>
