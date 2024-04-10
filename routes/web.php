@@ -8,8 +8,8 @@ use App\Http\Controllers\User\UserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+        'canLogin' => Route::has('entrar'),
+        'canRegister' => Route::has('cadastrar'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);

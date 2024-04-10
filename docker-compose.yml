@@ -1,5 +1,11 @@
 services:
     laravel.test:
+        deploy:
+            resources:
+                limits:
+                    memory: 4096M
+                reservations:
+                    memory: 2048M
         build:
             context: ./vendor/laravel/sail/runtimes/8.3
             dockerfile: Dockerfile

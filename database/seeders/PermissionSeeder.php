@@ -15,56 +15,60 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $actions = [
-            'create',
-            'read',
-            'update',
-            'delete',
-        ];
+       
+        try {
+            DB::beginTransaction();
+                $admin = Role::create(['name' => 'admin']);
+                $collaborator = Role::create(['name' => 'collaborator']);
+                $user = Role::create(['name' => 'user']);
+                $superAdmin = Role::create(['name' => 'super-admin']);
 
-        $modules = [
-            'users',
-            'roles',
-            'permissions',
-        ];
+                $permissions = [
+                    'users' => ['create', 'read', 'update', 'delete'],
+                    'roles' => ['create', 'read', 'update', 'delete'],
+                    'permissions' => ['create', 'read', 'update', 'delete'],
+                    'plans' => ['create', 'read', 'update', 'delete'],
+                    'subscriptions' => ['create', 'read', 'update', 'delete'],
+                    'address' => ['create', 'read', 'update', 'delete'],
+                    'address' => ['create', 'read', 'update', 'delete'],
+                ];
 
-        $roles = [
-            'super-admin' => 'Super Admin',
-            'admin' => 'Admin',
-            'user' => 'Usuário',
-        ];
-
-        foreach ($modules as $module) {
-            foreach ($actions as $action) {
-                Permission::firstOrCreate([
-                    'name' => "$module.$action",
-                ]);
-            }
-        }
-        
-        foreach ($roles AS $role => $roleName) {
-            Role::firstOrCreate([
-                'name' => $role,
-                'guard_name' => 'web',
-            ]);
-
-            if($role === 'super-admin') {
-                $role = Role::findByName('super-admin');
-                $role->givePermissionTo(Permission::all());                
-            }
-
-            if($role === 'admin') {
-                $role = Role::findByName('admin');
-                $modulesAdmin = collect($modules)->map(function ($module) {
-                    return !in_array($module, ['users']) ? $module : null;
-                })->filter();
-
-                foreach ($modulesAdmin as $module) {
+                foreach ($permissions as $resource => $actions) {
                     foreach ($actions as $action) {
-                        $role->givePermissionTo("$module.$action");
+                        Permission::firstOrCreate([
+                            'name' => "$resource.$action",
+                        ]);
                     }
                 }
-            }
+
+                $admin->givePermissionTo(Permission::all());
+                $superAdmin->givePermissionTo(Permission::all());
+                $collaborator->givePermissionTo([
+                    'users.read',
+                    'users.update',
+                    'roles.read',
+                    'roles.update',
+                    'permissions.read',
+                    'permissions.update',
+                    'plans.read',
+                    'plans.update',
+                    'subscriptions.read',
+                    'subscriptions.update',
+                    'address.read',
+                    'address.update',
+                ]);
+                $user->givePermissionTo([
+                    'users.update',
+                    'address.read',
+                    'address.create',
+                    'address.update',
+                    'address.delete',
+                ]);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            throw $e;
         }
     }
 }
