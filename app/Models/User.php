@@ -64,4 +64,68 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    /**
+     * Get the user's address.
+     */
+    public function address()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    /**
+     * Get the user's main address.
+     */
+    public function mainAddress()
+    {
+        return $this->hasOne(UserAddress::class)->where('main', true);
+    }
+
+    /**
+     * Get the user's main address.
+     */
+    public function scopeMainAddress($query)
+    {
+        return $query->whereHas('address', function ($query) {
+            $query->where('main', true);
+        });
+    }
+
+    /**
+     * Get the user's main address.
+     */
+    public function scopeNotMainAddress($query)
+    {
+        return $query->whereDoesntHave('address', function ($query) {
+            $query->where('main', true);
+        });
+    }
+
+    /**
+     * Get the user's main address.
+     */
+    public function scopeByAddress($query, $addressId)
+    {
+        return $query->whereHas('address', function ($query) use ($addressId) {
+            $query->where('id', $addressId);
+        });
+    }
+
+    /**
+     * Get the user's main address.
+     */
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('id', $userId);
+    }
 }
