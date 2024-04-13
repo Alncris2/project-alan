@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('document_proof_front')->nullable();
             $table->string('document_proof_back')->nullable();
             $table->enum('document_type', ['cpf', 'cnpj']);
-            $table->string('phone');
+            $table->string('phone', 15);
             $table->boolean('user_terms_accepted')->default(false);
             $table->timestamps();
             $table->softDeletes();

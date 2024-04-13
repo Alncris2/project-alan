@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('zip_code');
             $table->boolean('main')->default(false);
+            $table->geometry('location', subtype: 'point')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
